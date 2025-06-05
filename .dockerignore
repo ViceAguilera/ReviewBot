@@ -1,0 +1,49 @@
+# Dependencias (se instalan en el contenedor)
+node_modules/
+npm-debug.log*
+
+# Archivos de entorno (se pasan por docker-compose)
+.env
+.env.local
+.env.*.local
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Documentación
+README.md
+LICENSE
+*.md
+
+# Archivos temporales
+.tmp/
+*.tmp
+*.log
+logs/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Coverage y testing
+coverage/
+.nyc_output/
+.coverage/
+
+# Build artifacts
+dist/
+build/
+out/ 

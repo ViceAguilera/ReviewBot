@@ -1,0 +1,59 @@
+services:
+  # Servicio del bot de Discord
+  reviewbot:
+    build: .
+    container_name: reviewbot
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env
+    volumes:
+      # Persistir la base de datos SQLite si se usa
+      - ./data:/app/data
+    depends_on:
+      - mongodb
+    networks:
+      - reviewbot-network
+
+  # Servicio de MongoDB
+  mongodb:
+    image: mongo:7.0
+    container_name: reviewbot-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=reviewbot
+      - MONGO_INITDB_ROOT_PASSWORD=reviewbot123
+      - MONGO_INITDB_DATABASE=reviewbot
+    volumes:
+      - mongodb_data:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - reviewbot-network
+
+  # Servicio opcional de MongoExpress para administrar la DB
+  mongo-express:
+    image: mongo-express:latest
+    container_name: reviewbot-mongo-express
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=reviewbot
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=reviewbot123
+      - ME_CONFIG_MONGODB_URL=mongodb://reviewbot:reviewbot123@mongodb:27017/
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin123
+    depends_on:
+      - mongodb
+    networks:
+      - reviewbot-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  reviewbot-network:
+    driver: bridge 
