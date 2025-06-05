@@ -57,6 +57,43 @@ _ReviewBot es un asistente de Discord que permite a los usuarios registrar, visu
    npm run start
    ```
 
+### Configuración con Docker 🐳
+
+Si prefieres usar Docker para ejecutar el bot:
+
+1. **Asegúrate de tener Docker instalado**
+   - [Docker Desktop](https://www.docker.com/products/docker-desktop) para Windows/Mac
+   - [Docker Engine](https://docs.docker.com/engine/install/) para Linux
+
+2. **Construye la imagen Docker**
+   ```bash
+   docker build -t reviewbot .
+   ```
+
+3. **Ejecuta el contenedor**
+   ```bash
+   docker run -d --name reviewbot-container --env-file .env reviewbot
+   ```
+
+4. **Usando Docker Compose (opcional)**
+   
+   Crea un archivo `docker-compose.yml`:
+   ```yaml
+   version: '3.8'
+   services:
+     reviewbot:
+       build: .
+       container_name: reviewbot
+       env_file:
+         - .env
+       restart: unless-stopped
+   ```
+   
+   Ejecuta con:
+   ```bash
+   docker-compose up -d
+   ```
+
 ### Configuración adicional
 
 - **Discord Bot**: Ve al [Discord Developer Portal](https://discord.com/developers/applications), crea una aplicación y un bot
