@@ -37,8 +37,11 @@ export function buildReseñaEmbed(reseña, authorTag, avatarURL, imagenUrl) {
 
   const embed = new EmbedBuilder()
     .setColor('#FF9900')
-    // Ponemos al autor en la cabecera, con su avatar:
-    .setAuthor({ name: `Reseña hecha por ${authorTag}`, iconURL: avatarURL })
+    // Ponemos al autor en la cabecera, con su avatar (solo si es una URL válida):
+    .setAuthor({ 
+      name: `Reseña hecha por ${authorTag}`, 
+      iconURL: avatarURL && avatarURL.startsWith('http') ? avatarURL : undefined 
+    })
     .setTitle(`🍽️ Reseña: ${restaurante}`)
     .setDescription(
       resenaTexto.length > 1024
