@@ -1,11 +1,9 @@
-// src/services/duckduckgo.js
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
 
 /**
  * Busca en DuckDuckGo y devuelve la URL del primer resultado (sitio web oficial).
- * (Esta función ya la tienes, hemos corregido el caso 'uddg=' en mensajes anteriores.)
  */
 export async function buscarUrlRestaurante(query) {
   try {
@@ -43,8 +41,8 @@ export async function buscarUrlRestaurante(query) {
 }
 
 /**
- * Dado un URL de restaurante (por ejemplo, "https://cheddarsburger.cl/"),
- * hace scraping de la página para obtener la imagen principal (og:image).
+ * Dado un URL de restaurante,
+ * hace scraping de la página para obtener la imagen principal.
  * Retorna la URL de la imagen (p. ej. "https://cheddarsburger.cl/og-image.jpg"),
  * o cadena vacía "" si no se encuentra nada.
  */

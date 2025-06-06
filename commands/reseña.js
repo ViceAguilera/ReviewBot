@@ -1,4 +1,3 @@
-// src/commands/reseña.js
 import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
 import {
   crearReseña,

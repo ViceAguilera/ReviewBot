@@ -1,4 +1,3 @@
-// src/services/database.js
 import mongoose from 'mongoose';
 import dayjs from 'dayjs';
 

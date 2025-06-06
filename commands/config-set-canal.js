@@ -1,4 +1,3 @@
-// src/commands/config-set-canal.js
 import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 
 const configCanales = new Map();

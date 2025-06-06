@@ -1,4 +1,3 @@
-// src/services/embeds.js
 import { EmbedBuilder } from 'discord.js';
 import dayjs from 'dayjs';
 
@@ -62,10 +61,7 @@ export function buildReseñaEmbed(reseña, authorTag, avatarURL, imagenUrl) {
 
   // Ahora ponemos la imagen del restaurante como thumbnail (pequeña) o como imagen grande
   if (imagenUrl && (imagenUrl.startsWith('http://') || imagenUrl.startsWith('https://'))) {
-    // Como thumbnail (esquina superior derecha)
     embed.setThumbnail(imagenUrl);
-    // Si prefieres una imagen grande debajo del texto, usa setImage en lugar de setThumbnail:
-    // embed.setImage(imagenUrl);
   }
 
   return embed;

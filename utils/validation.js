@@ -1,5 +1,3 @@
-// src/utils/validation.js
-
 /**
  * Valida los inputs de /reseña add
  * - restaurante: string
