@@ -1,9 +1,9 @@
-// src/index.js
 import 'dotenv/config';
 import fs from 'fs';
 import path from 'path';
 import { Client, Collection, GatewayIntentBits, REST, Routes } from 'discord.js';
 import { conectarDB } from './services/database.js';
+import { handleReaction } from './handlers/buttonHandler.js';
 
 await conectarDB();
 
@@ -46,6 +46,12 @@ client.once('ready', () => {
 });
 
 client.on('interactionCreate', async (interaction) => {
+  if (interaction.isButton()) {
+    const [action, reviewId] = interaction.customId.split('_');
+    if (action === 'like' || action === 'dislike') {
+      return handleReaction(interaction, action, reviewId);
+    }
+  }
   if (!interaction.isChatInputCommand()) return;
   const command = client.commands.get(interaction.commandName);
   if (!command) return;

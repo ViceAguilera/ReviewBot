@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 import {
   crearReseña,
   editarReseña,
@@ -13,9 +13,9 @@ import {
 import { buildReseñaEmbed } from '../services/embeds.js';
 import { validateAddInputs, validateEditInputs } from '../utils/validation.js';
 import { configCanales } from './config-set-canal.js';
+import { assignUserLevel } from '../services/levels.js';
 
 export const data = new SlashCommandBuilder()
-  // — (Aquí va exactamente la definición que mostramos arriba) —
   .setName('reseña')
   .setDescription('Gestiona reseñas de restaurantes')
   .addSubcommand((sub) =>
@@ -48,6 +48,12 @@ export const data = new SlashCommandBuilder()
         opt.setName('comuna')
           .setDescription('Comuna donde se ubica el restaurante')
           .setRequired(true)
+      )
+      .addStringOption(opt =>
+        opt
+          .setName('menu')
+          .setDescription('URL o PDF del menú digital (opcional)')
+          .setRequired(false)
       )
   )
   .addSubcommand((sub) =>
@@ -127,6 +133,12 @@ export const data = new SlashCommandBuilder()
           .setDescription('Nueva URL del restaurante')
           .setRequired(false)
       )
+      .addStringOption(opt =>
+        opt
+          .setName('menu')
+          .setDescription('URL o PDF del menú digital (opcional)')
+          .setRequired(false)
+      )
   )
   .addSubcommand((sub) =>
     sub
@@ -160,6 +172,7 @@ export async function execute(interaction, client) {
       const comidasRaw = interaction.options.getString('comidas');
       const resenaTexto = interaction.options.getString('reseña');
       const comuna = interaction.options.getString('comuna');
+      const menuLink = interaction.options.getString('menu') || '';
 
       // Validación extra: calificación múltiplo de 0.5
       if (Math.round(calificacion * 100) % 50 !== 0) {
@@ -194,7 +207,8 @@ export async function execute(interaction, client) {
           comidasArr,
           resenaTexto,
           comuna,
-          urlRestaurante: ''
+          urlRestaurante: '',
+          menuLink
         });
       } catch (err) {
         console.error('Error creando reseña en BD:', err);
@@ -237,13 +251,39 @@ export async function execute(interaction, client) {
 
       // 5) Construir embed
       const embedAdd = buildReseñaEmbed(reseñaObj, authorTag, avatarURL, imagenUrl);
+      const row = new ActionRowBuilder().addComponents(
+        // Botón “Me gusta”
+        new ButtonBuilder()
+          .setCustomId(`like_${reseñaObj.id}`)
+          .setEmoji('👍')
+          .setLabel(`${reseñaObj.likedBy?.length || 0}`)
+          .setStyle(ButtonStyle.Primary),
+      
+        // Botón “No me gusta”
+        new ButtonBuilder()
+          .setCustomId(`dislike_${reseñaObj.id}`)
+          .setEmoji('👎')
+          .setLabel(`${reseñaObj.dislikedBy?.length || 0}`)
+          .setStyle(ButtonStyle.Secondary),
+      
+        // Botón Link
+        ...(reseñaObj.menuLink
+          ? [
+              new ButtonBuilder()
+                .setLabel('📖 Ver Menú')
+                .setURL(reseñaObj.menuLink)
+                .setStyle(ButtonStyle.Link)
+            ]
+          : [])
+      );
 
       // 6) Publicar en canal configurado
       const canalId = configCanales.get(interaction.guildId);
       if (canalId) {
         try {
           const canal = await client.channels.fetch(canalId);
-          await canal.send({ embeds: [embedAdd] });
+          await canal.send({ embeds: [embedAdd], components: [row] });
+          await assignUserLevel(client, interaction.guildId, autorDiscordId);
         } catch (err) {
           console.error('Error enviando embed al canal de reseñas:', err);
         }
@@ -395,7 +435,8 @@ export async function execute(interaction, client) {
         comidasArr: undefined,
         resenaTexto: interaction.options.getString('reseña') || undefined,
         comuna: interaction.options.getString('comuna') || undefined,
-        urlRestaurante: interaction.options.getString('url') || undefined
+        urlRestaurante: interaction.options.getString('url') || undefined,
+        menuLink: interaction.options.getString('menu') || undefined
       };
 
       const comidasRawEdit = interaction.options.getString('comidas');

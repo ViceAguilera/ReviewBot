@@ -23,7 +23,7 @@ const reseñaSchema = new Schema({
     max: 5.0
   },
   comidas: {
-    type: [String],          // arreglo de strings
+    type: [String],
     validate: [arrayLimit, '{PATH} excede el número máximo de 12 comidas'],
     required: true
   },
@@ -53,7 +53,19 @@ const reseñaSchema = new Schema({
   isDeleted: {
     type: Boolean,
     default: false
-  }
+  },
+  menuLink: {
+    type: String,
+    default: ''
+  },
+  likedBy: {
+    type: [String],
+    default: []
+  },
+  dislikedBy: {
+    type: [String],
+    default: []
+  },
 });
 
 // Validador para que "comidas" tenga máximo 12 ítems
@@ -101,7 +113,8 @@ export async function crearReseña({
   comidasArr,
   resenaTexto,
   comuna,
-  urlRestaurante = ''
+  urlRestaurante = '',
+  menuLink = ''
 }) {
   const nueva = new ReseñaModel({
     autorDiscord,
@@ -110,17 +123,17 @@ export async function crearReseña({
     comidas: comidasArr,
     resenaTexto,
     comuna,
-    urlRestaurante
+    urlRestaurante,
+    menuLink
   });
   const saved = await nueva.save();
-  return saved._id.toString(); // retornamos el ObjectId como string
+  return saved._id.toString();
 }
 
 // Obtener reseña por ID (que no esté marcada como eliminada)
 export async function obtenerReseñaPorId(id) {
   const doc = await ReseñaModel.findOne({ _id: id, isDeleted: false }).lean();
   if (!doc) return null;
-  // Mongoose devuelve _id, no id; convertimos a id y borramos isDeleted
   const { _id, __v, isDeleted, ...resto } = doc;
   return { id: _id.toString(), ...resto };
 }
@@ -134,7 +147,8 @@ export async function editarReseña(id, updates = {}) {
     'comidas',
     'resenaTexto',
     'comuna',
-    'urlRestaurante'
+    'urlRestaurante',
+    'menuLink'
   ];
   const payload = {};
   for (const key of Object.keys(updates)) {
@@ -143,7 +157,7 @@ export async function editarReseña(id, updates = {}) {
     }
   }
   if (Object.keys(payload).length === 0) {
-    return false; // nada que actualizar
+    return false;
   }
   const result = await ReseñaModel.findOneAndUpdate(
     { _id: id, isDeleted: false },
@@ -171,7 +185,6 @@ export async function listarReseñas({ filtro, autorDiscord, comuna, pagina = 1,
   } else if (filtro === 'comuna') {
     query.comuna = comuna;
   } else if (filtro === 'todas') {
-    // Sin añadir filtro extra
   } else {
     return [];
   }
@@ -181,7 +194,6 @@ export async function listarReseñas({ filtro, autorDiscord, comuna, pagina = 1,
     .skip(skip)
     .limit(limit)
     .lean();
-  // Convertir cada doc para incluir "id" en lugar de "_id"
   return docs.map(doc => {
     const { _id, __v, isDeleted, ...resto } = doc;
     return { id: _id.toString(), ...resto };
