@@ -5,14 +5,36 @@ Bot de Discord para registrar, consultar, editar y eliminar reseñas de restaura
 ![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat&logo=nodedotjs&logoColor=white)
 ![discord.js](https://img.shields.io/badge/discord.js-14-5865F2?style=flat&logo=discord&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=flat&logo=mongodb&logoColor=white)
-![Licencia MIT](https://img.shields.io/badge/licencia-MIT-blue?style=flat)
+![Estado](https://img.shields.io/badge/estado-activo-brightgreen?style=flat)
+![Licencia](https://img.shields.io/badge/licencia-MIT-blue?style=flat)
 ![Último commit](https://img.shields.io/github/last-commit/ViceAguilera/ReviewBot?style=flat)
 
 [Invitar al servidor](https://discord.com/oauth2/authorize?client_id=1379237068995166248)
 
+<!-- Demo: agrega una captura o GIF en docs/demo.gif y descomenta la línea siguiente -->
+<!-- <p align="center"><img src="docs/demo.gif" alt="Demostración de ReviewBot en Discord" width="800"></p> -->
+
+## Tabla de contenidos
+
+- [Descripción](#descripción)
+- [Estado del proyecto](#estado-del-proyecto)
+- [Características](#características)
+- [Comandos](#comandos)
+- [Tecnologías](#tecnologías)
+- [Requisitos](#requisitos)
+- [Instalación](#instalación)
+- [Uso](#uso)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Licencia](#licencia)
+- [Autor](#autor)
+
 ## Descripción
 
 ReviewBot permite a una comunidad de Discord llevar un registro compartido de reseñas de restaurantes: calificación, platos y bebidas consumidos, texto de la reseña y comuna. Las reseñas se publican como embeds en un canal configurable y los usuarios pueden reaccionar a ellas con botones. El proyecto se encuentra en versión 1.0 (beta).
+
+## Estado del proyecto
+
+**Activo.** El bot se encuentra en versión 1.0 (beta) y sigue en desarrollo.
 
 ## Características
 
@@ -57,6 +79,8 @@ git clone https://github.com/ViceAguilera/ReviewBot.git
 cd ReviewBot
 npm install
 ```
+
+### Configuración
 
 Copia `.env.example` a `.env` y completa las variables:
 
