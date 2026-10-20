@@ -1,108 +1,130 @@
-# ReviewBot 
+# ReviewBot
 
-###### **🚧 V1.0 Beta development.🚧🔨**
+Bot de Discord para registrar, consultar, editar y eliminar reseñas de restaurantes dentro de un servidor, mediante comandos slash.
 
-_ReviewBot es un asistente de Discord que permite a los usuarios registrar, visualizar, editar y eliminar reseñas de restaurantes directamente desde su servidor. Con comandos Slash, podrás:_
+![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat&logo=nodedotjs&logoColor=white)
+![discord.js](https://img.shields.io/badge/discord.js-14-5865F2?style=flat&logo=discord&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?style=flat&logo=mongodb&logoColor=white)
+![Estado](https://img.shields.io/badge/estado-activo-brightgreen?style=flat)
+![Licencia](https://img.shields.io/badge/licencia-MIT-blue?style=flat)
+![Último commit](https://img.shields.io/github/last-commit/ViceAguilera/ReviewBot?style=flat)
 
-• 📌 **/reseña add**: Ingresa el nombre del restaurante, calificación (hasta en medias estrellas), lista de platos y bebidas, texto de reseña y comuna.  
-• 🌐 Al crearse la reseña, el bot intentará buscar automáticamente la URL oficial del local mediante un scraping de DuckDuckGo. Si no la encuentra, podrás agregarla más adelante.  
-• 👀 **/reseña ver**: Muestra el detalle completo de una reseña (por ID o por nombre), incluyendo calificación en estrellas, lista de comidas, enlace al restaurante y texto.  
-• 📑 **/reseña listar**: Liste tus reseñas o las de toda la comunidad, con filtros por comuna, paginado y vista compacta.  
-• ✏️ **/reseña editar**: Modifica cualquier campo de tu reseña (restaurante, calificación, comidas, texto, comuna o enlace).  
-• 🗑️ **/reseña eliminar**: Borra lógicamente tu reseña cuando ya no sea válida.  
-• ⚙️ **/config set-canal_reseñas**: Configura el canal donde el bot publicará todos los embeds de reseñas. Solo administradores pueden hacerlo.
+[Invitar al servidor](https://discord.com/oauth2/authorize?client_id=1379237068995166248)
 
+<!-- Demo: agrega una captura o GIF en docs/demo.gif y descomenta la línea siguiente -->
+<!-- <p align="center"><img src="docs/demo.gif" alt="Demostración de ReviewBot en Discord" width="800"></p> -->
 
-## Construido con 🛠️
+## Tabla de contenidos
 
-- [Node.js](https://nodejs.org/) - Entorno de ejecución para JavaScript
-- [Discord.js](https://discord.js.org/) - Librería para crear bots de Discord
-- [Mongoose](https://mongoosejs.com/) - ODM para MongoDB
-- [MongoDB Atlas](https://www.mongodb.com/atlas) - Base de datos en la nube
-- [Cheerio](https://cheerio.js.org/) - Scraping de sitios web
-- [Axios](https://axios-http.com/) - Cliente HTTP para peticiones web
+- [Descripción](#descripción)
+- [Estado del proyecto](#estado-del-proyecto)
+- [Características](#características)
+- [Comandos](#comandos)
+- [Tecnologías](#tecnologías)
+- [Requisitos](#requisitos)
+- [Instalación](#instalación)
+- [Uso](#uso)
+- [Estructura del proyecto](#estructura-del-proyecto)
+- [Licencia](#licencia)
+- [Autor](#autor)
 
-## Instalación 🔧
+## Descripción
 
-### Prerrequisitos
-- [Node.js](https://nodejs.org/) v18 o superior
-- Una cuenta de [Discord Developer Portal](https://discord.com/developers/applications)
-- Una base de datos [MongoDB Atlas](https://www.mongodb.com/atlas) (gratuita)
+ReviewBot permite a una comunidad de Discord llevar un registro compartido de reseñas de restaurantes: calificación, platos y bebidas consumidos, texto de la reseña y comuna. Las reseñas se publican como embeds en un canal configurable y los usuarios pueden reaccionar a ellas con botones. El proyecto se encuentra en versión 1.0 (beta).
 
-### Pasos de instalación
+## Estado del proyecto
 
-1. **Clona el repositorio**
-   ```bash
-   git clone https://github.com/ViceAguilera/ReviewBot.git
-   cd ReviewBot
-   ```
+**Activo.** El bot se encuentra en versión 1.0 (beta) y sigue en desarrollo.
 
-2. **Instala las dependencias**
-   ```bash
-   npm install
-   ```
+## Características
 
-3. **Configura las variables de entorno**
-   
-   Crea un archivo `.env` en la raíz del proyecto:
-   ```env
-   DISCORD_TOKEN=tu_token_del_bot
-   CLIENT_ID=tu_client_id_de_discord
-   GUILD_ID=tu_guild_id_de_prueba
-   MONGODB_URI=mongodb+srv://usuario:contraseña@cluster.mongodb.net/reviewbot
-   ```
+- Creación de reseñas con restaurante, calificación (admite medias estrellas), comidas, texto y comuna.
+- Búsqueda automática de la URL del local mediante scraping de DuckDuckGo al crear la reseña; si no se encuentra, puede agregarse después al editar.
+- Consulta del detalle de una reseña por ID.
+- Listado de reseñas propias o de la comunidad, con filtro por comuna y paginación.
+- Edición de cualquier campo de la reseña y eliminación lógica.
+- Botones de reacción (like / dislike) en cada reseña.
+- Asignación de roles según la cantidad de reseñas de cada usuario (Regalón, Guatón y Otakin, con umbrales de 10, 20 y 30), si los roles existen en el servidor.
+- Configuración del canal de publicación, restringida a administradores.
 
-4. **Ejecuta el bot**
-   ```bash
-   npm run start
-   ```
+## Comandos
 
-### Configuración con Docker 🐳
+| Comando | Descripción |
+| --- | --- |
+| `/reseña add` | Crea una reseña. |
+| `/reseña ver` | Muestra el detalle de una reseña. |
+| `/reseña listar` | Lista reseñas con filtros y paginación. |
+| `/reseña editar` | Modifica los campos de una reseña. |
+| `/reseña eliminar` | Elimina (lógicamente) una reseña. |
+| `/config set-canal_reseñas` | Define el canal donde se publican las reseñas. |
 
-Si prefieres usar Docker para ejecutar el bot:
+## Tecnologías
 
-1. **Asegúrate de tener Docker instalado**
-   - [Docker Desktop](https://www.docker.com/products/docker-desktop) para Windows/Mac
-   - [Docker Engine](https://docs.docker.com/engine/install/) para Linux
+- Node.js (módulos ES) y [discord.js](https://discord.js.org/) 14
+- [Mongoose](https://mongoosejs.com/) / MongoDB
+- [Cheerio](https://cheerio.js.org/) y [Axios](https://axios-http.com/) para el scraping
+- [Day.js](https://day.js.org/)
+- Docker y Docker Compose
 
-2. **Construye la imagen Docker**
-   ```bash
-   docker build -t reviewbot .
-   ```
+## Requisitos
 
-3. **Ejecuta el contenedor**
-   ```bash
-   docker run -d --name reviewbot-container --env-file .env reviewbot
-   ```
+- Node.js 18 o superior
+- Una aplicación y un bot creados en el [Discord Developer Portal](https://discord.com/developers/applications)
+- Una instancia de MongoDB (local, Docker o Atlas)
 
-4. **Usando Docker Compose (opcional)**
-   
-   Crea un archivo `docker-compose.yml`:
-   ```yaml
-   version: '3.8'
-   services:
-     reviewbot:
-       build: .
-       container_name: reviewbot
-       env_file:
-         - .env
-       restart: unless-stopped
-   ```
-   
-   Ejecuta con:
-   ```bash
-   docker-compose up -d
-   ```
+## Instalación
 
-### Configuración adicional
+```bash
+git clone https://github.com/ViceAguilera/ReviewBot.git
+cd ReviewBot
+npm install
+```
 
-- **Discord Bot**: Ve al [Discord Developer Portal](https://discord.com/developers/applications), crea una aplicación y un bot
-- **MongoDB Atlas**: Crea un cluster gratuito y obtén la cadena de conexión
-- **Permisos del Bot**: Asegúrate de que el bot tenga permisos para leer mensajes, enviar mensajes y usar comandos slash
+### Configuración
 
-## Licencia 📄
+Copia `.env.example` a `.env` y completa las variables:
 
-Este proyecto está bajo el _MIT_ - mira el archivo [LICENSE](LICENSE) para detalles
+| Variable | Descripción |
+| --- | --- |
+| `DISCORD_TOKEN` | Token del bot de Discord. |
+| `CLIENT_ID` | ID de la aplicación de Discord. |
+| `GUILD_ID` | ID del servidor donde se registran los comandos. |
+| `MONGODB_URI` | Cadena de conexión a MongoDB. |
+| `NODE_ENV` | Entorno de ejecución (`production` en el ejemplo). |
 
-## Autor ✒️
-[**Vicente Aguilera Arias**](https://github.com/ViceAguilera)
+## Uso
+
+```bash
+npm start
+```
+
+Al iniciar, el bot se conecta a MongoDB y registra los comandos slash en el servidor indicado por `GUILD_ID`.
+
+### Docker
+
+El repositorio incluye `Dockerfile` y `docker-compose.yml` (bot, MongoDB y mongo-express). Antes de usarlos, revisa y cambia las credenciales de ejemplo definidas en `docker-compose.yml`.
+
+```bash
+docker compose up -d
+```
+
+## Estructura del proyecto
+
+```
+index.js              Punto de entrada: conexión a la base de datos, registro de comandos y eventos
+commands/             Comandos slash (/reseña y /config)
+handlers/             Manejo de botones de reacción
+services/             Base de datos, embeds, niveles de usuario y búsqueda en DuckDuckGo
+utils/                Validaciones
+mongo-init.js         Script de inicialización de MongoDB
+Dockerfile            Imagen del bot
+docker-compose.yml    Bot + MongoDB + mongo-express
+```
+
+## Licencia
+
+Distribuido bajo la licencia MIT. Ver [LICENSE](LICENSE).
+
+## Autor
+
+**Vicente Aguilera Arias** — [Portafolio](https://portfolio.iamsirius.cl) · [GitHub](https://github.com/ViceAguilera) · [LinkedIn](https://www.linkedin.com/in/vicenteaguilera/)
